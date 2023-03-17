@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS public.pembayaran
+(
+    id bigint NOT NULL DEFAULT nextval('users_id_seq'::regclass),
+    id_petugas bigint,
+    nisn bigint NOT NULL,
+    tgl_bayar character varying(255) COLLATE pg_catalog."default" NOT NULL,
+    bulan_dibayar character varying(8) COLLATE pg_catalog."default" NOT NULL,
+    tahun_dibayar character varying(4) COLLATE pg_catalog."default" NOT NULL,
+    id_spp bigint,
+    jumlah_bayar bigint,
+    created_at timestamp(0) without time zone,
+    updated_at timestamp(0) without time zone,
+    CONSTRAINT pembayaran_pkey PRIMARY KEY (id)
+)
