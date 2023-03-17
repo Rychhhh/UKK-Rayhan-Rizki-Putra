@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="description" content="Start your development with a Dashboard for Bootstrap 4.">
   <meta name="author" content="Creative Tim">
-  <title>SPPKuy - </title>
+  <title>SPP IT  - Sekolah UNTUK KITA </title>
   <!-- Favicon -->
   <link rel="icon" href="{{ asset('img/brand/favicon.png')}}" type="image/png">
   <!-- Fonts -->
@@ -29,16 +29,22 @@
       <!-- Brand -->
       <div class="sidenav-header  align-items-center">
         <a class="navbar-brand" href="javascript:void(0)">
-          SPPKuyss
+          SPP IT
         </a>
       </div>
       <div class="navbar-inner">
         <!-- Collapse -->
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
 
-          <h1>TEs</h1>
           <!-- Nav items -->
           <ul class="navbar-nav">
+
+            <li class="nav-item">
+              <a class="nav-link active" href="{{ route('users.index')}}">
+                <i class="ni ni-single-02 text-yellow"></i>
+                <span class="nav-link-text">User</span>
+              </a>
+            </li>
 
             {{-- @if(Auth::user()->role === 'administrator')
             <li class="nav-item">
@@ -118,7 +124,7 @@
             @endif --}}
 
             <li class="nav-item">
-              <a class="nav-link" href="{{ route('status-tunggakan')}}">
+              <a class="nav-link" href="halo">
                 <i class="ni ni-bullet-list-67 text-primary"></i>
                 <span class="nav-link-text">Status Tunggakan</span>
               </a>
@@ -400,24 +406,18 @@
       <!-- Footer -->
       <footer class="footer pt-0">
         <div class="row align-items-center justify-content-lg-between">
-          <div class="col-lg-6">3
+          <div class="col-lg-6">
             <div class="copyright text-center  text-lg-left  text-muted">
-              &copy; 2020 <a href="https://www.creative-tim.com" class="font-weight-bold ml-1" target="_blank">Creative Tim</a>
+              &copy; 2020 <a href="http://127.0.0.1:8000/" class="font-weight-bold ml-1" target="_blank">SPP IT</a>
             </div>
           </div>
           <div class="col-lg-6">
             <ul class="nav nav-footer justify-content-center justify-content-lg-end">
               <li class="nav-item">
-                <a href="https://www.creative-tim.com" class="nav-link" target="_blank">Creative Tim</a>
-              </li>
-              <li class="nav-item">
                 <a href="https://www.creative-tim.com/presentation" class="nav-link" target="_blank">About Us</a>
               </li>
               <li class="nav-item">
                 <a href="http://blog.creative-tim.com" class="nav-link" target="_blank">Blog</a>
-              </li>
-              <li class="nav-item">
-                <a href="https://github.com/creativetimofficial/argon-dashboard/blob/master/LICENSE.md" class="nav-link" target="_blank">MIT License</a>
               </li>
             </ul>
           </div>

@@ -5,11 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pembayaran extends Model
+class Siswa extends Model
 {
     use HasFactory;
 
-    protected $table = 'pembayaran';
+    protected $table = 'siswa';
 
-    protected $primaryKey = 'id_pembayaran';
+    protected $primaryKey = 'nisn';
+
+
 }
