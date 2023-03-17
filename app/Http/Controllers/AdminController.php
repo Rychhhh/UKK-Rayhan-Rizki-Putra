@@ -36,6 +36,7 @@ class AdminController extends Controller
      */
     public function store(Request $request)
     {
+
             try {
                 $newDataUser = new User();
                 $newDataUser->name = $request->name;
@@ -70,8 +71,7 @@ class AdminController extends Controller
         //
         $user = DB::table('users')
         ->where('id', '=', $id)
-        ->get();
-
+        ->first();
 
         return view('admin.edit', compact('user'));
     }
@@ -79,16 +79,32 @@ class AdminController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        try {
+            $newDataUser = User::find($id);
+            $newDataUser->name = $request->name;
+            $newDataUser->email = $request->email;
+            $newDataUser->password = Hash::make($request->password);
+            $newDataUser->role = $request->role;
+            $newDataUser->save();
+
+            return redirect('users');
+        } catch (Exception $e) {
+            throw $e;    
+        }
+          
+
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
-        //
+        $delete = User::findOrFail($id);
+        $delete->delete();
+
+        return redirect('users');
     }
 }

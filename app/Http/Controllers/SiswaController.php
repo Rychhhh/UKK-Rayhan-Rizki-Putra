@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Siswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SiswaController extends Controller
 {
@@ -12,6 +14,13 @@ class SiswaController extends Controller
     public function index()
     {
         //
+        $dataSiswa = DB::table('siswa')
+        ->leftJoin('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
+        ->leftJoin('spp', 'siswa.id_spp', 'spp.id_spp')
+        ->select('*', 'kelas.nama_kelas', 'spp.tahun as tahun_spp', 'spp.nominal as nominal_spp')
+        ->get();
+
+        return view('siswa.index', compact('dataSiswa'));
     }
 
     /**
@@ -20,6 +29,12 @@ class SiswaController extends Controller
     public function create()
     {
         //
+        $dataListKelas = DB::table('kelas')
+        ->get();
+        $dataListSpp = DB::table('spp')
+        ->get();
+
+        return view('siswa.add', compact('dataListKelas', 'dataListSpp'));
     }
 
     /**
@@ -27,7 +42,18 @@ class SiswaController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        
+        $newDataUser = new Siswa();
+        $newDataUser->nisn = $request->nisn;
+        $newDataUser->nis = $request->nis;
+        $newDataUser->nama = $request->name;
+        $newDataUser->id_kelas = $request->kelas;
+        $newDataUser->alamat = $request->alamat;
+        $newDataUser->no_telp = $request->no_telp;
+        $newDataUser->id_spp = $request->spp;
+        $newDataUser->save();
+
+        return redirect('siswa');
     }
 
     /**
@@ -41,17 +67,37 @@ class SiswaController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+        $siswa = DB::table('siswa')
+        ->where('nisn', '=', $id)
+        ->first();
+
+        $dataListKelas = DB::table('kelas')
+        ->get();
+        $dataListSpp = DB::table('spp')
+        ->get();
+
+        return view('siswa.edit', compact('siswa', 'dataListKelas', 'dataListSpp'));    
+        
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $newDataUser = Siswa::find($id);
+        $newDataUser->nisn = $request->nisn;
+        $newDataUser->nis = $request->nis;
+        $newDataUser->nama = $request->name;
+        $newDataUser->id_kelas = $request->kelas;
+        $newDataUser->alamat = $request->alamat;
+        $newDataUser->no_telp = $request->no_telp;
+        $newDataUser->id_spp = $request->spp;
+        $newDataUser->save();
+
+        return redirect('siswa');
     }
 
     /**
@@ -59,6 +105,9 @@ class SiswaController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $delete = Siswa::findOrFail($id);
+        $delete->delete();
+
+        return redirect('siswa');
     }
 }

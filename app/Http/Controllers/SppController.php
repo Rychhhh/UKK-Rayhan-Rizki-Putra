@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Spp;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SppController extends Controller
 {
@@ -11,7 +13,8 @@ class SppController extends Controller
      */
     public function index()
     {
-        //
+        $dataSpp = DB::table('spp')->get();
+        return view('spp.index', compact('dataSpp'));
     }
 
     /**
@@ -20,6 +23,7 @@ class SppController extends Controller
     public function create()
     {
         //
+        return view('spp.add');
     }
 
     /**
@@ -27,7 +31,13 @@ class SppController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $newDataUser = new Spp(); 
+        $newDataUser->tahun = $request->tahun;
+        $newDataUser->nominal = $request->nominal;
+        $newDataUser->save();
+
+        return redirect('spp');
+
     }
 
     /**
@@ -41,17 +51,28 @@ class SppController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit( $id)
     {
-        //
+        $spp = DB::table('spp')
+        ->where('id_spp','=', $id)
+        ->first();
+
+
+        return view('spp.edit', compact('spp'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(Request $request, $id)
     {
-        //
+        $newDataUser = Spp::find($id); 
+        $newDataUser->tahun = $request->tahun;
+        $newDataUser->nominal = $request->nominal;
+        $newDataUser->save();
+
+        return redirect('spp');
+
     }
 
     /**
@@ -59,6 +80,9 @@ class SppController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $delete = Spp::findOrFail($id);
+        $delete->delete();
+
+        return redirect('spp');
     }
 }

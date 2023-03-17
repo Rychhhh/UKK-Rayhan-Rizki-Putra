@@ -42,7 +42,7 @@
               <label for="exampleInputEmail1" class="form-control-label">Role</label>
                 <select name="role" >
                     <option value="administrator">Administrator</option>
-                    <option value="petguas">Petugas</option>
+                    <option value="petugas">Petugas</option>
                 </select>
             </div>
             <button type="submit" class="btn btn-primary">Submit</button>

@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class PembayaranController extends Controller
 {
@@ -11,7 +13,24 @@ class PembayaranController extends Controller
      */
     public function index()
     {
+
+        $dataSiswa = DB::table('siswa')
+        ->get();
         //
+        $dataPetugas = DB::table('users')
+        ->where('role', '=', 'petugas')
+        ->get();
+
+        $dataSpp = DB::table('spp')
+        ->get();
+
+        $dataPembayaran = DB::table('pembayaran')
+        ->leftJoin('spp', 'pembayaran.id_spp',  '=', 'spp.id_spp')
+        ->leftJoin('siswa', 'pembayaran.nisn','=', 'siswa.nisn')
+        ->select('*', 'pembayaran.id as debit_id')
+        ->get();
+
+        return view('pembayaran.index', compact('dataPembayaran', 'dataSiswa', 'dataPetugas','dataSpp'));
     }
 
     /**
@@ -27,7 +46,45 @@ class PembayaranController extends Controller
      */
     public function store(Request $request)
     {
-        //
+
+        $idSpp = DB::table('siswa')
+        ->where('nisn', '=', $request->id_nisn)
+        ->first();
+
+        
+        $bayarApaBelumSebelumnya = DB::table('siswa')
+        ->whereNotNull('nominal_bayar')
+        ->first();
+
+        if($bayarApaBelumSebelumnya) {
+             DB::table('siswa')
+            ->where('nisn', '=', $request->id_nisn)
+            ->update([
+                'nominal_bayar' => $request->jumlah_bayar + $bayarApaBelumSebelumnya->nominal_bayar,
+                'status_bayar' => 1
+            ]);           
+        } else {
+            DB::table('siswa')
+            ->where('nisn', '=', $request->id_nisn)
+            ->update([
+                'nominal_bayar' => $request->jumlah_bayar,
+                'status_bayar' => 1
+            ]);            
+
+        }
+
+
+        $newDataUser = new Pembayaran();
+        $newDataUser->id_petugas = $request->id_petugas;
+        $newDataUser->nisn = $request->id_nisn;
+        $newDataUser->tgl_bayar = $request->tanggal_bayar;
+        $newDataUser->bulan_dibayar = $request->bulan_bayar;
+        $newDataUser->tahun_dibayar = $request->tahun_bayar;
+        $newDataUser->jumlah_bayar = $request->jumlah_bayar;
+        $newDataUser->id_spp = $idSpp->id_spp;
+        $newDataUser->save();
+
+        return redirect('pembayaran');
     }
 
     /**
@@ -57,8 +114,12 @@ class PembayaranController extends Controller
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(string $id)
+    public function destroy( $id)
     {
         //
+        $delete = Pembayaran::findOrFail($id);
+        $delete->delete();
+
+        return redirect('pembayaran');
     }
 }

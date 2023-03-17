@@ -1,18 +1,4 @@
-@php
-    use App\Models\User;
-    use App\Models\Pembayaran;
-
-    $petugas = User::where('role', '=', 'petugas')->count();
-    $siswa = User::where('role', '=', 'siswa')->count();
-    $administrator = User::where('role', '=', 'administrator')->count();
-    $transaksi = Pembayaran::all()->count();
-
-
-@endphp
-
-
 @extends('layouts.temp')
-
 
 @section('breadcrumb')
 <div class="row">
@@ -20,7 +6,7 @@
         <ol class="breadcrumb breadcrumb-links breadcrumb-dark">
             <li class="breadcrumb-item"><a href="#"><i class="fas fa-home"></i></a></li>
             <li class="breadcrumb-item"><a href="{{ route('dashboard')}}">Dashboards</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Users</li>
+            <li class="breadcrumb-item active" aria-current="page">Kelas</li>
           </ol>
         </div>
     </div>
@@ -28,39 +14,34 @@
 @endsection
 
 @section('content')
-
 <div class="py-12">
     <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 space-y-6">
-    <a href="{{ route('users.create')}}" class="btn btn-sm btn-success">
+    <a href="{{ route('kelas.create')}}" class="btn btn-success btn-sm">
         Add
     </a>
-            <table class="table table-dark align-items-center">
+    <table class="table table-dark align-items-center table-dark">
         <thead class="thead-dark">
             <tr>
             <th scope="col">No</th>
-            <th scope="col">Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Role</th>
-            <th scope="col">Password</th>
+            <th scope="col">Nama Kelas</th>
+            <th scope="col">Kompetensi Keahlian</th>
             <th scope="col">Handle</th>
             </tr>
         </thead>
         <tbody class="list">
-            @foreach ($user as $item)
+            @foreach ($getData as $item)
                 <tr>
                     <th scope="row">{{ $loop->iteration }}</th>
-                    <td>{{$item->name}}</td>
-                    <td>{{$item->email}}</td>
-                    <td>{{$item->role}}</td>
-                    <td>*********</td>
+                    <td>{{$item->nama_kelas}}</td>
+                    <td>{{$item->kompetensi_keahlian}}</td>
                     <td class="d-flex">
-                          <a class="mt-1 btn btn-success btn-sm" href="{{ url('users/'. $item->id. '/edit')}}">
+                          <a class="mt-1 btn btn-sm btn-success" href="{{ url('kelas/'. $item->id_kelas. '/edit')}}">
                             Edit
                           </a>
-                            <form action="{{ url('users/'.$item->id) }}" method="POST" class="ml-5">
+                            <form action="{{ url('kelas/'.$item->id_kelas) }}" method="POST" class="ml-5">
                             @csrf
                             <input type="hidden" name="_method" value="DELETE">
-                            <input type="hidden" name="id" value="{{$item->id}}">
+                            <input type="hidden" name="id_kelas" value="{{$item->id_kelas}}">
                             <button type="submit" class="btn btn-sm btn-danger ms-3 mt-2" data-bs-toggle="modal" data-bs-target="#exampleModal">
                               Delete
                             </button>

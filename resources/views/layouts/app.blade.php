@@ -38,17 +38,10 @@
 
           <!-- Nav items -->
           <ul class="navbar-nav">
+            @if(Auth::user()->role === 'administrator')
 
             <li class="nav-item">
               <a class="nav-link active" href="{{ route('users.index')}}">
-                <i class="ni ni-single-02 text-yellow"></i>
-                <span class="nav-link-text">User</span>
-              </a>
-            </li>
-
-            {{-- @if(Auth::user()->role === 'administrator')
-            <li class="nav-item">
-              <a class="nav-link active" href="{{ route('user.index')}}">
                 <i class="ni ni-single-02 text-yellow"></i>
                 <span class="nav-link-text">User</span>
               </a>
@@ -68,6 +61,7 @@
               </a>
             </li>
 
+
             <li class="nav-item">
               <a class="nav-link " href="{{ route('spp.index')}}">
                 <i class="ni ni-bullet-list-67 text-default"></i>
@@ -75,12 +69,14 @@
               </a>
             </li>
 
+
             <li class="nav-item">
               <a class="nav-link " href="{{ route('pembayaran.index')}}">
                 <i class="ni ni-planet text-orange"></i>
                 <span class="nav-link-text">Pembayaran</span>
               </a>
-            </li>
+            </li> 
+
             @endif
 
             @if(Auth::user()->role === 'petugas')
@@ -121,14 +117,7 @@
                 <span class="nav-link-text">Status Tunggakan</span>
               </a>
             </li>
-            @endif --}}
-
-            <li class="nav-item">
-              <a class="nav-link" href="halo">
-                <i class="ni ni-bullet-list-67 text-primary"></i>
-                <span class="nav-link-text">Status Tunggakan</span>
-              </a>
-            </li>
+            @endif 
 
           </ul>
           <!-- Navigation -->
