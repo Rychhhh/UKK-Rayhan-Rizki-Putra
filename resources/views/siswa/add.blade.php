@@ -22,13 +22,18 @@
 
             <div class="mb-3 form-group">
               <label for="exampleInputEmail1" class="form-control-label">Nisn</label>
-              <input type="number" name="nisn" class="  form-control" id="exampleInputEmail1" aria-describedby="nisn">
+              <input type="number" 
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              name="nisn" class="  form-control" id="exampleInputEmail1" maxLength="10" aria-describedby="nisn">
+
               <b class="form-control-label">Enter Your Nisn</b>
             </div>
 
             <div class="mb-3 form-group">
               <label for="exampleInputEmail1" class="form-control-label">Nis</label>
-              <input type="number" name="nis" class="  form-control" id="exampleInputEmail1" aria-describedby="nis">
+              <input type="number"
+              oninput="javascript: if (this.value.length > this.maxLength) this.value = this.value.slice(0, this.maxLength);"
+              name="nis" class="form-control" maxLength="8" id="exampleInputEmail1" aria-describedby="nis">
               <b class="form-control-label">Enter Your Nis</b>
             </div>
 

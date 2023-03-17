@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Pembayaran;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
 
 class PembayaranController extends Controller
 {
@@ -33,12 +35,50 @@ class PembayaranController extends Controller
         return view('pembayaran.index', compact('dataPembayaran', 'dataSiswa', 'dataPetugas','dataSpp'));
     }
 
+    public function historyPembayaranPetugas(Request $request)
+    {
+        $dataPembayaran = DB::table('pembayaran')
+        ->leftJoin('spp', 'pembayaran.id_spp',  '=', 'spp.id_spp')
+        ->leftJoin('siswa', 'pembayaran.nisn','=', 'siswa.nisn')
+        ->select('*', 'pembayaran.id as debit_id')
+        ->get();
+
+        return view('pembayaran.historypembayaran', compact('dataPembayaran'));
+    }
+    
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function history(Request $request)
     {
-        //
+        $getNisn = DB::table('siswa')
+        ->where('user_id', '=', Auth::user()->id)
+        ->first();
+                
+        $dataPembayaran = DB::table('pembayaran')
+        ->leftJoin('spp', 'pembayaran.id_spp',  '=', 'spp.id_spp')
+        ->leftJoin('siswa', 'pembayaran.nisn','=', 'siswa.nisn')
+        ->select('*', 'pembayaran.id as debit_id')
+        ->where('pembayaran.nisn', '=', $getNisn->nisn)
+        ->get();
+
+        return view('siswa.history_siswa_pembayaran', compact('dataPembayaran'));
+    }
+
+    public function laporanPdfOnline()
+    {
+        $pembayaran = DB::table('pembayaran')->get();
+
+        $pdf = PDF::loadView('pembayaran.cetakpdf', compact('pembayaran'));
+        return $pdf->stream();
+    }
+
+    public function laporanPdfDownload()
+    {
+        $pembayaran = DB::table('pembayaran')->get();
+
+        $pdf = PDF::loadView('pembayaran.cetakpdf', compact('pembayaran'));
+        return $pdf->download('pembayaran.pdf');
     }
 
     /**
@@ -53,6 +93,7 @@ class PembayaranController extends Controller
 
         
         $bayarApaBelumSebelumnya = DB::table('siswa')
+        ->where('nisn', '=', $request->id_nisn)
         ->whereNotNull('nominal_bayar')
         ->first();
 
@@ -72,7 +113,6 @@ class PembayaranController extends Controller
             ]);            
 
         }
-
 
         $newDataUser = new Pembayaran();
         $newDataUser->id_petugas = $request->id_petugas;

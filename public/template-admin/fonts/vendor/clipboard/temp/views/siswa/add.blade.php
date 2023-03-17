@@ -7,8 +7,6 @@
                 @csrf
                 <input type="hidden" name="_method" value="POST">
 
-
-
                 <div class="mb-3 form-group">
                   <label for="exampleInputEmail1" class="form-control-label">Nisn</label>
                   <input type="number" name="nisn" class="  form-control" id="exampleInputEmail1" aria-describedby="nisn">

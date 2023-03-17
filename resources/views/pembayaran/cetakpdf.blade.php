@@ -10,7 +10,7 @@
         <th>Jumlah</th>
         <th>Total Harga</th>
         <th>Nama Pegawai</th>
-        <th>Created At</th>
+        <th>Dibuat Pada</th>
     </thead>
 
     <tbody>
@@ -22,8 +22,7 @@
             <td>{{ $item->bulan_dibayar }}</td>
             <td>{{ $item->tahun_dibayar }}</td>
             <td>{{ $item->jumlah_bayar }}</td>
-            <td>{{ $item->created_at->format('d-m-Y') }}</td>
-            <td>{{ $item->created_at->diffInMinutes(Carbon::now());            }}</td>
+            <td>{{ $item->created_at }}</td> 
 
         </tr>
         @endforeach

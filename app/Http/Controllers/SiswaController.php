@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Siswa;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 
 class SiswaController extends Controller
 {
@@ -42,7 +43,14 @@ class SiswaController extends Controller
      */
     public function store(Request $request)
     {
-        
+        $insertSiswaGetId = DB::table('users')
+        ->insertGetId([
+            'name' => $request->name,
+            'email' => $request->name. '@gmail.com',
+            'password' => Hash::make($request->name),
+            'role' => 'siswa',
+        ]);
+
         $newDataUser = new Siswa();
         $newDataUser->nisn = $request->nisn;
         $newDataUser->nis = $request->nis;
@@ -51,6 +59,7 @@ class SiswaController extends Controller
         $newDataUser->alamat = $request->alamat;
         $newDataUser->no_telp = $request->no_telp;
         $newDataUser->id_spp = $request->spp;
+        $newDataUser->user_id = $insertSiswaGetId;
         $newDataUser->save();
 
         return redirect('siswa');
