@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 
+
 class KelasController extends Controller
 {
     /**
@@ -16,6 +17,7 @@ class KelasController extends Controller
     {
         $getData = DB::table('kelas')
         ->get();
+
         return view('kelas.index', compact('getData'));
     }
 
@@ -33,12 +35,18 @@ class KelasController extends Controller
      */
     public function store(Request $request)
     {
-        $newDataUser = new Kelas(); 
-        $newDataUser->nama_kelas = $request->nama_kelas;
-        $newDataUser->kompetensi_keahlian = $request->kompetensi_keahlian;
-        $newDataUser->save();
-
-        return redirect('kelas');
+            $newDataUser = new Kelas(); 
+            $newDataUser->nama_kelas = $request->nama_kelas;
+            $newDataUser->kompetensi_keahlian = $request->kompetensi_keahlian;
+            
+            if(!$newDataUser->getOriginal()) {
+                $newDataUser->save();
+                return redirect('kelas')->with('success', 'Berhasil Ditambahkan!');
+            } 
+            
+            if($newDataUser->getOriginal()) {
+                return redirect('kelas')->with('failed', 'Data Gagal Ditambahkan !');
+            }
     }
 
     /**
@@ -71,8 +79,8 @@ class KelasController extends Controller
         $newDataUser->nama_kelas = $request->namakelas;
         $newDataUser->kompetensi_keahlian = $request->kompetensikeahlian;
         $newDataUser->save();
+        return redirect('kelas')->with('success', 'Berhasil Diedit!');
 
-        return redirect('kelas');
     }
 
     /**
@@ -83,6 +91,6 @@ class KelasController extends Controller
         $destroy = Kelas::findOrFail($id);
         $destroy->delete();
 
-        return redirect('kelas');
+        return redirect('kelas')->with('success', 'Berhasil Dihapus!');
     }
 }

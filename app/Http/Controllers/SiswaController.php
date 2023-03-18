@@ -62,7 +62,14 @@ class SiswaController extends Controller
         $newDataUser->user_id = $insertSiswaGetId;
         $newDataUser->save();
 
-        return redirect('siswa');
+        if(!$newDataUser->getOriginal()) {
+            return redirect('siswa')->with('failed', 'Data Gagal Ditambahkan !');
+        } 
+        
+        if($newDataUser->getOriginal()) {
+            return redirect('siswa')->with('success', 'Berhasil Ditambahkan!');
+        }
+
     }
 
     /**
@@ -115,8 +122,14 @@ class SiswaController extends Controller
     public function destroy(string $id)
     {
         $delete = Siswa::findOrFail($id);
+        $deleteDataUsers = DB::table('users')
+        ->where('id', '=', $delete->user_id)
+        ->delete();
         $delete->delete();
 
-        return redirect('siswa');
+        if($deleteDataUsers) {
+            return redirect('siswa')->with('success', 'Data Berhasil Dihapus');
+        }
+
     }
 }

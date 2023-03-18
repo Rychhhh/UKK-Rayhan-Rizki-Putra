@@ -184,7 +184,10 @@ return [
 
         /*
          * Package Service Providers...
+         * 
          */
+        RealRashid\SweetAlert\SweetAlertServiceProvider::class,
+
 
         /*
          * Application Service Providers...
@@ -210,8 +213,10 @@ return [
 
     'aliases' => Facade::defaultAliases()->merge([
         // 'ExampleClass' => App\Example\ExampleClass::class,
-        'checkRole' => \App\Http\Middleware\CheckRole::class,
+        'checkRole' => \App\Htketp\Middleware\CheckRole::class,
         'PDF' => Barryvdh\DomPDF\Facade::class,
+        'Alert' => RealRashid\SweetAlert\Facades\Alert::class,
+
     ])->toArray(),
 
 ];

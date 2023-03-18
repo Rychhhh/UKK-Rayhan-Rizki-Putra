@@ -45,7 +45,14 @@ class AdminController extends Controller
                 $newDataUser->role = $request->role;
                 $newDataUser->save();
 
-                return redirect('users');
+                if(!$newDataUser->getOriginal()) {
+                    return redirect('users')->with('failed', 'Data Gagal Ditambahkan !');
+                } 
+                
+                if($newDataUser->getOriginal()) {
+                    return redirect('users')->with('success', 'Berhasil Ditambahkan!');
+                }
+
             } catch (Exception $e) {
                 $user = DB::table('users')->get();
                 $err = $e->getMessage();
@@ -89,7 +96,7 @@ class AdminController extends Controller
             $newDataUser->role = $request->role;
             $newDataUser->save();
 
-            return redirect('users');
+            return redirect('users')->with('success', 'Berhasil Diedit!');
         } catch (Exception $e) {
             throw $e;    
         }
@@ -105,6 +112,6 @@ class AdminController extends Controller
         $delete = User::findOrFail($id);
         $delete->delete();
 
-        return redirect('users');
+        return redirect('users')->with('success', 'Berhasil Dihapus!');
     }
 }

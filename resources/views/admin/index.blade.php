@@ -34,6 +34,19 @@
     <a href="{{ route('users.create')}}" class="btn btn-sm btn-success">
         Add
     </a>
+
+    @if(session()->has('success'))
+    <div class="alert alert-success">
+        {{ session()->get('success') }}
+    </div>
+    @endif
+
+    @if(session()->has('failed'))
+        <div class="alert alert-danger">
+            {{ session()->get('failed') }}
+        </div>
+    @endif
+    
             <table class="table table-dark align-items-center">
         <thead class="thead-dark">
             <tr>

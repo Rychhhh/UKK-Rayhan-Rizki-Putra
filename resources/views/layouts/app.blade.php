@@ -19,7 +19,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
   <!-- Scripts -->
   @vite(['resources/css/app.css', 'resources/js/app.js'])
-  <link rel="stylesheet" href="{{ asset('css/argon.css?v=1.2.0')}}" type="text/css">
+    <link rel="stylesheet" href="{{ asset('css/argon.css?v=1.2.0')}}" type="text/css">
 </head>
 
 <body>
@@ -28,7 +28,7 @@
     <div class="scrollbar-inner">
       <!-- Brand -->
       <div class="sidenav-header  align-items-center">
-        <a class="navbar-brand" href="javascript:void(0)">
+        <a class="navbar-brand" href="  :void(0)">
           SPP IT
         </a>
       </div>
@@ -37,95 +37,7 @@
         <div class="collapse navbar-collapse" id="sidenav-collapse-main">
 
           <!-- Nav items -->
-          <ul class="navbar-nav">
-            @if(Auth::user()->role === 'administrator')
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('dashboard')}}">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Dashboard</span>
-              </a>
-            </li>
-            
-            <li class="nav-item">
-              <a class="nav-link active" href="{{ route('users.index')}}">
-                <i class="ni ni-single-02 text-yellow"></i>
-                <span class="nav-link-text">User</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link " href="{{ route('kelas.index')}}">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Kelas</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link " href="{{ route('siswa.index')}}">
-                <i class="ni ni-single-02 text-orange"></i>
-                <span class="nav-link-text">Siswa</span>
-              </a>
-            </li>
-
-
-            <li class="nav-item">
-              <a class="nav-link " href="{{ route('spp.index')}}">
-                <i class="ni ni-bullet-list-67 text-default"></i>
-                <span class="nav-link-text">Spp</span>
-              </a>
-            </li>
-
-
-            <li class="nav-item">
-              <a class="nav-link " href="{{ route('pembayaran.index')}}">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Pembayaran</span>
-              </a>
-            </li> 
-
-            @endif
-
-            @if(Auth::user()->role === 'petugas')
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('dashboard')}}">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Dashboard</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('historypetugas')}}">
-                <i class="ni ni-box-2 text-danger"></i>
-                <span class="nav-link-text">History Pembayaran</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link " href="{{ route('pembayaran.index')}}">
-                <i class="ni ni-planet text-orange"></i>
-                <span class="nav-link-text">Pembayaran</span>
-              </a>
-            </li>
-
-            @endif
-
-            @if(Auth::user()->role === 'siswa')
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('history')}}">
-                <i class="ni ni-box-2 text-danger"></i>
-                <span class="nav-link-text">History Pembayaran</span>
-              </a>
-            </li>
-
-            <li class="nav-item">
-              <a class="nav-link" href="{{ route('status-tunggakan')}}">
-                <i class="ni ni-bullet-list-67 text-primary"></i>
-                <span class="nav-link-text">Status Tunggakan</span>
-              </a>
-            </li>
-            @endif 
-
-          </ul>
+          @include('layouts.sidebar')
           <!-- Navigation -->
         </div>
       </div>
@@ -331,7 +243,7 @@
                 <div class="dropdown-header noti-title">
                   <h6 class="text-overflow m-0">Welcome {{ Auth::user()->name}}!</h6>
                 </div>
-                <a href="#!" class="dropdown-item">
+                <a href="{{ url('profile')}}" class="dropdown-item">
                   <i class="ni ni-single-02"></i>
                   <span>My profile</span>
                 </a>
@@ -420,8 +332,12 @@
       </footer>
     </div>
   </div>
+
   <!-- Argon Scripts -->
   <!-- Core -->
+  <link href='https://cdn.jsdelivr.net/npm/sweetalert2@10.10.1/dist/sweetalert2.min.css'>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@10.16.6/dist/sweetalert2.all.min.js"></script>@include('sweetalert::alert')
+
   <script src="{{ asset('vendor/jquery/dist/jquery.min.js')}}"></script>
   <script src="{{ asset('vendor/bootstrap/dist/js/bootstrap.bundle.min.js')}}"></script>
   <script src="{{ asset('vendor/js-cookie/js.cookie.js')}}"></script>

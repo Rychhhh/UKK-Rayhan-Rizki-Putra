@@ -31,22 +31,30 @@ Route::get('/dashboard', function () {
 
 Route::middleware('auth')->group(function () {
 
-    // Route::middleware('checkRole: administrator')->group(function() {
+    Route::middleware('CheckRole:administrator')->group(function() {
         Route::resource('users', AdminController::class);
         Route::resource('kelas', KelasController::class);
         Route::resource('siswa', SiswaController::class);
         Route::resource('spp', SppController::class);
         Route::resource('pembayaran', PembayaranController::class);
-    // });
+        Route::get('laporan/online_pdf', [PembayaranController::class, 'laporanPdfOnline']);
+        Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);    
+    });
 
-    Route::get('history-petugas', [PembayaranController::class, 'historyPembayaranPetugas'])->name('historypetugas');
-    Route::get('laporan/online_pdf', [PembayaranController::class, 'laporanPdfOnline']);
-    Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);
+    Route::middleware('CheckRole:petugas')->group(function() {
+        Route::get('history-petugas', [PembayaranController::class, 'historyPembayaranPetugas'])->name('historypetugas');
+        Route::resource('pembayaran', PembayaranController::class);
+        Route::get('laporan/online_pdf', [PembayaranController::class, 'laporanPdfOnline']);
+        Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);
+    });
 
-    // kerjakan ini
-    Route::get('status-tunggakan', [TunggakanController::class, 'siswaTunggakan'])->name('status-tunggakan');
-    Route::get('print-pdf-single/{id}', [TunggakanController::class, 'printPdfSingle'])->name('print-pdf-single');
-    Route::get('history', [PembayaranController::class, 'history'])->name('history');
+    Route::middleware('CheckRole:siswa')->group(function() {
+        Route::get('status-tunggakan', [TunggakanController::class, 'siswaTunggakan'])->name('status-tunggakan');
+        Route::get('print-pdf-single/{id}', [TunggakanController::class, 'printPdfSingle'])->name('print-pdf-single');
+        Route::get('history', [PembayaranController::class, 'history'])->name('history');
+    
+    });
+
     
 
 

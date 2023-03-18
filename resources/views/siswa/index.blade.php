@@ -19,6 +19,19 @@
     <a href="{{ route('siswa.create')}}" class="btn btn-sm btn-success">
         Add
     </a>
+
+    @if(session()->has('success'))
+    <div class="alert alert-success">
+        {{ session()->get('success') }}
+    </div>
+    @endif
+
+    @if(session()->has('failed'))
+        <div class="alert alert-danger">
+            {{ session()->get('failed') }}
+        </div>
+    @endif
+    
     <table  class="table align-items-center table-dark">
 
         <thead class="thead-dark">
