@@ -38,7 +38,7 @@ Route::middleware('auth')->group(function () {
         Route::resource('spp', SppController::class);
     });
 
-    Route::middleware('CheckRole:administrator, petugas')->group(function() {
+    Route::middleware('CheckRole:administrator,petugas')->group(function() {
         Route::resource('pembayaran', PembayaranController::class)->middleware('CheckRole:administrator,petugas');
         Route::get('laporan/online_pdf', [PembayaranController::class, 'laporanPdfOnline']);
         Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);
