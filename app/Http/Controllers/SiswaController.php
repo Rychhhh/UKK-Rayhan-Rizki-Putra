@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Siswa;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -14,14 +15,19 @@ class SiswaController extends Controller
      */
     public function index()
     {
-        //
+        
         $dataSiswa = DB::table('siswa')
         ->leftJoin('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
         ->leftJoin('spp', 'siswa.id_spp', 'spp.id_spp')
-        ->select('*', 'kelas.nama_kelas', 'spp.tahun as tahun_spp', 'spp.nominal as nominal_spp')
+        ->leftJoin('pembayaran', 'siswa.nisn',  'pembayaran.nisn')
+        ->select('*', 'kelas.nama_kelas', 'spp.tahun as tahun_spp', 'spp.nominal as nominal_spp', 'pembayaran.for_month')
         ->get();
 
-        return view('siswa.index', compact('dataSiswa'));
+
+        $dataListKelas = DB::table('kelas')
+        ->get();
+
+        return view('siswa.index', compact('dataSiswa', 'dataListKelas'));
     }
 
     /**
@@ -36,6 +42,52 @@ class SiswaController extends Controller
         ->get();
 
         return view('siswa.add', compact('dataListKelas', 'dataListSpp'));
+    }
+
+    public function filterStatusPembayaran(Request $request)
+    {
+        $filter = $request->filter_status;
+
+        $day = Carbon::now()->format('d');
+        $parsing = '2022-07-'. $day;
+        $toDate = Carbon::parse($parsing);
+        $timenow = Carbon::now()->format('Y-m-d');
+        $fromDate = Carbon::parse($timenow);
+        $months = $toDate->diffInMonths($fromDate);
+
+        if($filter === 'sudah') {
+            $dataSiswa = DB::table('siswa')
+            ->leftJoin('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
+            ->leftJoin('spp', 'siswa.id_spp', 'spp.id_spp')
+            ->leftJoin('pembayaran', 'siswa.nisn', 'pembayaran.nisn')
+            ->select('*', 'kelas.nama_kelas', 'spp.tahun as tahun_spp', 'spp.nominal as nominal_spp', 'pembayaran.for_month')
+            ->where('nominal_bayar', '>=', $months * 1000000)
+            ->where('siswa.id_kelas', '=', $request->kelas)
+            ->get();
+
+            $dataListKelas = DB::table('kelas')
+            ->get();
+    
+
+            return view('siswa.index', compact('dataSiswa', 'dataListKelas'));
+        }
+
+        if($filter === 'nunggak') {
+            $dataSiswa = DB::table('siswa')
+            ->leftJoin('kelas', 'siswa.id_kelas', 'kelas.id_kelas')
+            ->leftJoin('spp', 'siswa.id_spp', 'spp.id_spp')
+            ->leftJoin('pembayaran', 'siswa.nisn', 'pembayaran.nisn')
+            ->select('*', 'kelas.nama_kelas', 'spp.tahun as tahun_spp', 'spp.nominal as nominal_spp', 'pembayaran.for_month')
+            ->where('nominal_bayar', '<', $months * 1000000)
+            ->where('siswa.id_kelas', '=', $request->kelas)
+            ->get();
+
+            $dataListKelas = DB::table('kelas')
+            ->get();
+    
+
+            return view('siswa.index', compact('dataSiswa', 'dataListKelas'));
+        }
     }
 
     /**

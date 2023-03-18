@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pembayaran;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -15,7 +16,6 @@ class PembayaranController extends Controller
      */
     public function index()
     {
-
         $dataSiswa = DB::table('siswa')
         ->get();
         //
@@ -30,9 +30,17 @@ class PembayaranController extends Controller
         ->leftJoin('spp', 'pembayaran.id_spp',  '=', 'spp.id_spp')
         ->leftJoin('siswa', 'pembayaran.nisn','=', 'siswa.nisn')
         ->select('*', 'pembayaran.id as debit_id')
+        ->orderBy('pembayaran.created_at', 'desc')
         ->get();
 
-        return view('pembayaran.index', compact('dataPembayaran', 'dataSiswa', 'dataPetugas','dataSpp'));
+        $currentMonth = date('Y');
+
+        $nominalSpp = DB::table('spp')
+        ->where('tahun', '=', $currentMonth)
+        ->select('tahun','nominal')
+        ->first();
+
+        return view('pembayaran.index', compact('dataPembayaran', 'dataSiswa', 'dataPetugas','dataSpp', 'nominalSpp'));
     }
 
     public function historyPembayaranPetugas(Request $request)
@@ -86,7 +94,20 @@ class PembayaranController extends Controller
      */
     public function store(Request $request)
     {
+        // auto input day,month,year
+        $day =  (new Carbon($request->tanggal_bayar))->format("d"); //day
+        $month =  (new Carbon($request->tanggal_bayar))->format("m"); //month
+        $year =  (new Carbon($request->tanggal_bayar))->format("Y"); //year   
+        
+        $jumlahSpp = null;
+        if(intval($request->metode_pembayaran) === 0 ) {
+            $nominalSpp = DB::table('spp')
+            ->where('tahun', '=', date('Y'))
+            ->select('tahun','nominal')
+            ->first();
 
+            $jumlahSpp = $nominalSpp;
+        } 
         $idSpp = DB::table('siswa')
         ->where('nisn', '=', $request->id_nisn)
         ->first();
@@ -98,29 +119,62 @@ class PembayaranController extends Controller
         ->first();
 
         if($bayarApaBelumSebelumnya) {
-             DB::table('siswa')
-            ->where('nisn', '=', $request->id_nisn)
-            ->update([
-                'nominal_bayar' => $request->jumlah_bayar + $bayarApaBelumSebelumnya->nominal_bayar,
-                'status_bayar' => 1
-            ]);           
-        } else {
-            DB::table('siswa')
-            ->where('nisn', '=', $request->id_nisn)
-            ->update([
-                'nominal_bayar' => $request->jumlah_bayar,
-                'status_bayar' => 1
-            ]);            
 
+            if(intval($request->metode_pembayaran) === 0 ) {
+
+                DB::table('siswa')
+                ->where('nisn', '=', $request->id_nisn)
+                ->update([
+                    'nominal_bayar' => $jumlahSpp->nominal + $bayarApaBelumSebelumnya->nominal_bayar,
+                    'status_bayar' => 1,
+                ]);           
+                
+            } else {
+                DB::table('siswa')
+                ->where('nisn', '=', $request->id_nisn)
+                ->update([
+                    'nominal_bayar' => $request->custom_jumlah_bayar + $bayarApaBelumSebelumnya->nominal_bayar,
+                    'status_bayar' => 1,
+                ]);        
+            }
+         
+        } else {
+            if(intval($request->metode_pembayaran) === 0 ) {
+
+                DB::table('siswa')
+                ->where('nisn', '=', $request->id_nisn)
+                ->update([
+                    'nominal_bayar' => $jumlahSpp->nominal,
+                    'status_bayar' => 1,
+                ]);   
+                
+            } else {
+                DB::table('siswa')
+                ->where('nisn', '=', $request->id_nisn)
+                ->update([
+                    'nominal_bayar' => $request->custom_jumlah_bayar,
+                    'status_bayar' => 1,
+                    ]);        
+            }  
         }
 
         $newDataUser = new Pembayaran();
         $newDataUser->id_petugas = $request->id_petugas;
         $newDataUser->nisn = $request->id_nisn;
-        $newDataUser->tgl_bayar = $request->tanggal_bayar;
-        $newDataUser->bulan_dibayar = $request->bulan_bayar;
-        $newDataUser->tahun_dibayar = $request->tahun_bayar;
-        $newDataUser->jumlah_bayar = $request->jumlah_bayar;
+        $newDataUser->tgl_bayar = $day;
+        $newDataUser->bulan_dibayar = $month;
+        $newDataUser->tahun_dibayar = $year;
+
+
+        if(intval($request->metode_pembayaran) === 0 ) {
+            $newDataUser->jumlah_bayar = $jumlahSpp->nominal;
+            $newDataUser->for_month = 1;
+
+        } else {
+            $newDataUser->jumlah_bayar = intval($request->custom_jumlah_bayar);
+            $newDataUser->for_month = $request->for_month;
+        }
+
         $newDataUser->id_spp = $idSpp->id_spp;
         $newDataUser->save();
 

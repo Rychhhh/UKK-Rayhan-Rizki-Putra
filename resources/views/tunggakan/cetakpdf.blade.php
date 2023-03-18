@@ -6,27 +6,19 @@
 </div>
 
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous" width="50" height="50">
-<span style="font-weight: bold;">SPP YUK</span>
+<span style="font-weight: bold;">SPP IT SMP Untuk Kita.</span>
 <img class="me-5"  style="margin-left: 200px;"  src="https://www.shutterstock.com/image-vector/spp-letter-original-monogram-logo-260nw-1772852024.jpg" alt="" width="150">
 <div class="d-flex flex-row mb-3 ">
     <div>Nisn
-     <span style="margin-left: 110px;">: {{ $tunggakan->id_siswa}}</span>
+     <span style="margin-left: 110px;">: {{ $tunggakan->nisn}}</span>
     </div>
     <div>
         Bulan
-        <span style="margin-left: 102px;">: {{ $tunggakan->bulan}}</span>
+        <span style="margin-left: 102px;">: {{ date('m') * 1000000 / 1000000 -  $tunggakan->nominal_bayar / 1000000}} Bulan </span>
     </div>
     <div>
         Total Tunggakan
-        <span style="margin-left: 30px;">: {{ $tunggakan->total_tunggakan}}</span>
-    </div>
-    <div>
-        Sisa Bulan
-        <span style="margin-left: 71px;">: {{ $tunggakan->sisa_bulan}} Bulan</span>
-    </div>
-    <div>
-        Deskripsi
-        <span style="margin-left: 79px;">: {{ $tunggakan->deskripsi}}</span>
+        <span style="margin-left: 30px;">: {{ number_format(date('m') * 1000000 - $tunggakan->nominal_bayar,  2, ',', '.') }}</span>
     </div>
 </div>
 <b>HARAP DIBAYAR DENGAN SEGERA DAN SIMPAN STRUK INI.</b>

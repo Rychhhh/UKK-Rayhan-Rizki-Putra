@@ -1,3 +1,14 @@
+@php
+    use Carbon\Carbon;
+       $day = Carbon::now()->format('d');
+                $parsing = '2022-07-'. $day;
+                $toDate = Carbon::parse($parsing);
+                $timenow = Carbon::now()->format('Y-m-d');
+                $fromDate = Carbon::parse($timenow);
+                
+                $months = $toDate->diffInMonths($fromDate);
+@endphp
+
 @extends('layouts.temp')
 
 @section('breadcrumb')
@@ -33,9 +44,8 @@
                         <th scope="row">{{ $loop->iteration }}</th>
                         <td>{{$item->nisn}}</td>
                         <td>Rp. {{ number_format($item->nominal_bayar, 2, ',', '.')}}</td>
-                        <td>{{ date('m') * 1000000 / 1000000 -  $item->nominal_bayar / 1000000}} Bulan</td>
-
-                        <td>Rp. {{ number_format(date('m') * 1000000 - $item->nominal_bayar,  2, ',', '.') }}</td>
+                        <td>{{ 12 - $item->for_month }} Bulan</td>
+                        <td>Rp. {{ number_format(12 * 1000000 - $item->nominal_bayar,  2, ',', '.') }}</td>
                         <td>
                             <a  class="btn btn-sm btn-primary">Bayar</a>
                             <a href="{{ url('print-pdf-single/'. $item->nisn)}}" class="btn btn-sm btn-success">Print</a>

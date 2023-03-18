@@ -36,16 +36,17 @@ Route::middleware('auth')->group(function () {
         Route::resource('kelas', KelasController::class);
         Route::resource('siswa', SiswaController::class);
         Route::resource('spp', SppController::class);
-        Route::resource('pembayaran', PembayaranController::class);
+    });
+
+    Route::middleware('CheckRole:administrator, petugas')->group(function() {
+        Route::resource('pembayaran', PembayaranController::class)->middleware('CheckRole:administrator,petugas');
         Route::get('laporan/online_pdf', [PembayaranController::class, 'laporanPdfOnline']);
-        Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);    
+        Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);
+        Route::post('filter-status', [SiswaController::class, 'filterStatusPembayaran']);
     });
 
     Route::middleware('CheckRole:petugas')->group(function() {
         Route::get('history-petugas', [PembayaranController::class, 'historyPembayaranPetugas'])->name('historypetugas');
-        Route::resource('pembayaran', PembayaranController::class);
-        Route::get('laporan/online_pdf', [PembayaranController::class, 'laporanPdfOnline']);
-        Route::get('laporan/download_pdf', [PembayaranController::class, 'laporanPdfDownload']);
     });
 
     Route::middleware('CheckRole:siswa')->group(function() {

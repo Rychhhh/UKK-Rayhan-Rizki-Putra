@@ -1,14 +1,14 @@
 <ul class="navbar-nav">
     @if(Auth::user()->role === 'administrator')
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('dashboard')}}">
+      <a class="nav-link active" href="{{ route('dashboard')}}">
         <i class="ni ni-planet text-orange"></i>
         <span class="nav-link-text">Dashboard</span>
       </a>
     </li>
     
     <li class="nav-item">
-      <a class="nav-link active" href="{{ route('users.index')}}">
+      <a class="nav-link " href="{{ route('users.index')}}">
         <i class="ni ni-single-02 text-yellow"></i>
         <span class="nav-link-text">User</span>
       </a>

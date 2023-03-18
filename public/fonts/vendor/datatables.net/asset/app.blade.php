@@ -346,8 +346,7 @@
                   <i class="ni ni-support-16"></i>
                   <span>Support</span>
                 </a>
-                <div class="dropdown-divider"></div>
-                <a href="#!" class="dropdown-item">
+                <div class="dropdown-divider">
                   <i class="ni ni-user-run"></i>
                   <form method="POST" action="{{ route('logout') }}" class="text-dark">
                     @csrf
@@ -358,7 +357,8 @@
                         {{ __('Log Out') }}
                     </x-dropdown-link>
                 </form>
-                </a>
+                </div>
+                
               </div>
             </li>
           </ul>
@@ -380,10 +380,6 @@
                   <li class="breadcrumb-item active" aria-current="page">Default</li>
                 </ol>
               </nav>
-            </div>
-            <div class="col-lg-6 col-5 text-right">
-              <a href="#" class="btn btn-sm btn-neutral">New</a>
-              <a href="#" class="btn btn-sm btn-neutral">Filters</a>
             </div>
           </div>
           <!-- Card stats -->

@@ -80,19 +80,6 @@
                   <label for="exampleInputPassword1" class="form-control-label">Tanggal Bayar</label>
                   <input type="date" class="form-control" name="tanggal_bayar" placeholder="Password">
                 </div>
-                <div class="mb-3 my-3">
-                    <label for="exampleInputEmail1" class="form-control-label"> Tahun Dibayar</label>
-                    <select class="form-control" name="tahun_bayar">
-                        <option>Select Year</option>
-                        @foreach($years as $year) : ?>
-                          <option value="@php echo $year; @endphp">@php echo $year; @endphp</option>
-                        @endforeach
-                      </select>
-                </div>
-                <div class="d-flex flex-col my-3">
-                  <label for="exampleInputPassword1" class="form-control-label">Bulan Dibayar</label>
-                  <input type="month" class="form-control" name="bulan_bayar" placeholder="Password">
-                </div>
                 <div class="d-flex flex-col my-3">
                     <label for="exampleInputPassword1" class="form-control-label">Jumlah Bayar</label>
                     <input type="number" class="form-control" name="jumlah_bayar" placeholder="Jumlah Bayar">

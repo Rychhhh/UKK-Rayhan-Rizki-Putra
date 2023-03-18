@@ -1,3 +1,17 @@
+        @php
+                use Carbon\Carbon;
+
+                $day = Carbon::now()->format('d');
+                $parsing = '2022-07-'. $day;
+                $toDate = Carbon::parse($parsing);
+                $timenow = Carbon::now()->format('Y-m-d');
+                $fromDate = Carbon::parse($timenow);
+                
+                $months = $toDate->diffInMonths($fromDate);
+
+              
+        @endphp
+
 @extends('layouts.temp')
 
 @section('breadcrumb')
@@ -32,8 +46,32 @@
         </div>
     @endif
     
-    <table  class="table align-items-center table-dark">
 
+    <form action="{{ url('filter-status')}}" method="POST">
+      @csrf
+    <div class="mb-3 d-flex flex-col">
+        <label for="exampleInputEmail1" class="form-control-label">Kelas</label>
+        <select class=" form-control form-select" name="kelas" aria-label="Default select example">
+            @foreach($dataListKelas as $year) : ?>
+              <option value="{{ $year->id_kelas }}">{{ $year->nama_kelas}}</option>
+            @endforeach
+          </select>
+    </div>
+
+    <div class="d-flex flex-col my-3">
+      <label class="form-control-label">Filter Status</label>
+      <select class="form-select " name="filter_status" >
+        <option value="sudah_lunas">Sudah Dibayar</option>
+        <option value="nunggak">Nunggak</option>
+      </select>
+    </div>
+
+    <div>
+      <button type="submit" class="btn btn-primary ">Search</button>
+    </div>
+    </form>
+
+    <table  class="table align-items-center table-dark">
         <thead class="thead-dark">
             <tr>
             <th scope="col">Nisn</th>
@@ -45,6 +83,7 @@
             <th scope="col">Tahun SPP</th>
             <th scope="col">Nominal SPP Per Bulan</th>
             <th scope="col">Nominal Sudah Bayar</th>
+            <th scope="col">Sisa Bulan</th>
             <th scope="col">Status Dibayar</th>
             <th scope="col">Handle</th>
             </tr>
@@ -52,6 +91,7 @@
         <tbody class="list">
             @foreach ($dataSiswa as $item)
                 <tr>
+                  
                     <th scope="row">{{ $item->nisn }}</th>
                     <td>{{$item->nis}}</td>
                     <td>{{$item->nama}}</td>
@@ -61,6 +101,7 @@
                     <td>{{$item->tahun_spp}}</td>
                     <td>Rp. {{number_format($item->nominal_spp, 2, ',', '.')}}</td>
                     <td>Rp. {{number_format($item->nominal_bayar, 2, ',', '.')}}</td>
+                    <td> {{ 12 - $item->for_month }} Bulan</td>
                     @if ($item->status_bayar === 0)
                       @if ($item->nominal_bayar === null)
                         <td>
@@ -68,7 +109,7 @@
                         </td>
                       @endif
                     @else
-                      @if ($item->nominal_bayar >= date('m') * 1000000)
+                      @if ($item->nominal_bayar >= $months * 1000000)
                         <td>
                           <div class="btn btn-sm btn-success">Dibayar</div>
                         </td>

@@ -2,8 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use PDF;
+
 
 class TunggakanController extends Controller
 {
@@ -14,11 +18,31 @@ class TunggakanController extends Controller
     {
         //
 
+        $day = Carbon::now()->format('d');
+        $parsing = '2022-07-'. $day;
+        $toDate = Carbon::parse($parsing);
+        $timenow = Carbon::now()->format('Y-m-d');
+        $fromDate = Carbon::parse($timenow);
+        
+        $months = $toDate->diffInMonths($fromDate);
+
         $nisnSiswa = DB::table('siswa')
-        ->where('nominal_bayar', '<', date('m') * 1000000)
+        ->leftJoin('pembayaran', 'siswa.nisn', 'pembayaran.nisn')
+        ->where('user_id', '=', Auth::id())
+        ->where('nominal_bayar', '<', $months * 1000000)
         ->get();
 
         return view('tunggakan.usertunggakan', compact('nisnSiswa'));
+    }
+
+    public function printPdfSingle($id )
+    {
+        $tunggakan = DB::table('siswa')
+        ->where('nisn', '=', $id)
+        ->first();
+
+        $pdf = PDF::loadView('tunggakan.cetakpdf', compact('tunggakan'));
+        return $pdf->download('tunggakan.pdf');
     }
 
     /**
